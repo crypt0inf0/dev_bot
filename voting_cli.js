@@ -23,7 +23,7 @@ axios.get(api_url + '/account/' + username).then((user_data) => {
 user_vp = (user_data.data.vt.v);
 user_bw = (user_data.data.bw.v);
 console.log(user_vp)
-if (user_vp >= 384663 && user_bw >= 5000){
+if (user_vp >= 5000 && user_bw >= 5000){
 
 // stream
 let streamer = new AvalonStreamer(api_url)
