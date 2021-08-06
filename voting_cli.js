@@ -1,7 +1,7 @@
 const path = require('path')
 const dotenv = require('dotenv')
 const axios = require('axios')
-const AvalonStreamer = require('./modules/avalonStreamer')
+const AvalonStreamer = require('./components/avalonStreamer')
 const javalon = require('javalon')
 
 dotenv.config({ path: '.env'})
