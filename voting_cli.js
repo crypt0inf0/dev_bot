@@ -71,7 +71,7 @@ function checkBlockForContents(txData) {
 }
 
 // Upvoting 
-async function upvote(txData){
+function upvote(txData){
   console.log('Upvoting...',  )
   try {
   // Get author of the post
@@ -102,7 +102,7 @@ async function upvote(txData){
 }
 
 // Downvoting
-async function downvote(txData){
+function downvote(txData){
   console.log('Downvoting...',  )
   try {
   // Get author of the post
