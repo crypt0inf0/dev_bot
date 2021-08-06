@@ -19,12 +19,11 @@ const priv_key = '34EpMEDFJwKbxaF7FhhLyEe3AhpM4dwHMLVfs4JyRto5';
 
 
 // Check user voting power & bandwidth
-axios.get(api_url + '/account/' + username).then((user_data) => {
-user_vp = (user_data.data.vt.v);
-user_bw = (user_data.data.bw.v);
+axios.get(api_url + '/accounts/' + username).then((user_data) => {
+user_vp = user_data.data[0].vt.v;
+user_bw = user_data.data[0].bw.v;
 console.log(user_vp)
 if (user_vp >= 5000 && user_bw >= 5000){
-
 // stream
 let streamer = new AvalonStreamer(api_url)
 streamer.streamBlocks((newBlock) => {
