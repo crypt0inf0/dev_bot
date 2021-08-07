@@ -6,7 +6,6 @@ module.exports = class {
         this.unparsedBlocks = 0
         this.fetchingBlock = false
         this.api = api
-        this.irreversible = irreversible ? true : false
     }
 
     streamBlocks (cb) {
@@ -19,12 +18,12 @@ module.exports = class {
                     else
                         this.unparsedBlocks = bHeight.data.count - this.headBlock
             }).catch(() => {})
-        },3000)
+        },1000)
     
         setInterval(() => {
             if (this.unparsedBlocks > 0 && !this.fetchingBlock) {
                 this.fetchingBlock = true
-                axios.get(this.api + '/block/' + (this.irreversible ? this.headBlock - 14 : this.headBlock - 1)).then((newBlock) => {
+                axios.get(this.api + '/block/' + (this.headBlock+1)).then((newBlock) => {
                     this.headBlock++
                     this.unparsedBlocks--
                     setTimeout(() => this.fetchingBlock = false,500)
@@ -35,8 +34,6 @@ module.exports = class {
     }
 
     streamTransactions(cb) {
-        this.streamBlocks((newBlock) => {
-            newBlock.txs.forEach(txn => cb(txn,newBlock._id))
-        })
+        this.streamBlocks(newBlock)
     }
 }
