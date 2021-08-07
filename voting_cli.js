@@ -108,8 +108,9 @@ function downvote(txData){
   // Get author of the post
   var author = txData.author;
   var permlink = txData.permlink;
-  // Change vote power = 1000;
-  var vp = -201;
+  // vote power
+  var random_vp = Math.floor(Math.floor(Math.random() * 2048) - 2050); // Random num between -2-2050
+  var vp = random_vp;
   var tag = '';
   // Broadcast vote to blockchain
   var newTx = {
