@@ -11,7 +11,7 @@ javalon.getDiscussionsByAuthor(process.argv[2], null, null, (err, contents) => {
     for (i = 0; i < content_count; i++) {
     let author = contents[i].author
     let permlink = contents[i].link
-    let vp = -250
+    let vp = -250 // Change vp
     let tag = ''
     
     var newTx = {
