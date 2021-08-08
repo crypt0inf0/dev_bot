@@ -12,7 +12,7 @@ javalon.getDiscussionsByAuthor(process.argv[2], null, null, (err, contents) => {
     for (i = 0; i < content_count; i++) {
     let author = contents[i].author
     let permlink = contents[i].link
-    let vp = -250 // Change vp
+    let vp = -250 // Change vp | Math.floor(Math.floor(Math.random() * 2048) - 2050); // Random num between -2-2050
     let tag = ''
     
     var newTx = {
