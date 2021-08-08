@@ -1,4 +1,5 @@
 const javalon = require('javalon')
+const cb = (err, res) => console.log("Error: ", err, "Result: ", res)
 
 const username = ''
 const priv_key = ''
