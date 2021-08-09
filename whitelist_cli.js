@@ -43,6 +43,6 @@ javalon.getAccounts([process.argv[2]], (err, accounts) => {
   var data = fs.readFileSync('./db/whitelist.json');
   var users = JSON.parse(data);
   users.push(whitelist);
-  fs.writeFile("./db/whitelist.json", JSON.stringify(users), 'utf8', callback);
+  fs.writeFile("./db/whitelist.json", JSON.stringify(users, null, 2), 'utf8', callback);
 })
 

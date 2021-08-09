@@ -42,6 +42,6 @@ javalon.getAccounts(['sperm-bot-01'], (err, accounts) => {
   var data = fs.readFileSync('./db/blacklist.json');
   var users = JSON.parse(data);
   users.push(blacklist);
-  fs.writeFile("./db/blacklist.json", JSON.stringify(users), 'utf8', callback);
+  fs.writeFile("./db/blacklist.json", JSON.stringify(users, null, 2), 'utf8', callback);
 });
 
