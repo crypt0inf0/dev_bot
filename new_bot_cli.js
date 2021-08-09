@@ -14,7 +14,7 @@ let r2 = (Math.random() + 1).toString(36).substring(2);
 var newUser = r + '-' + r1 + '-' + r2
 // console.log(newUser);
 
-// Generate avalon pub/priv key
+// Generate pub/priv key
 var key = javalon.keypair();
 var newUser_pub = key.pub;
 var newUser_priv = key.priv;
@@ -43,6 +43,7 @@ function getBots() {
     }
 
     // Broadcast new user to blockchain
+    // ** Approximately  2.13 DTC required to create new account **
     var newTx = {
         type: javalon.TransactionType.NEW_ACCOUNT,
         data: {
