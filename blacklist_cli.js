@@ -27,7 +27,7 @@ javalon.getAccounts(['sperm-bot-01'], (err, accounts) => {
   
   newTx = javalon.sign(priv_key, username, newTx)
 
-  var blacklist = {
+  var blacklist_db = {
     _id: _id,
     user: user,
     status: status,
@@ -41,7 +41,7 @@ javalon.getAccounts(['sperm-bot-01'], (err, accounts) => {
 
   var data = fs.readFileSync('./db/blacklist.json');
   var users = JSON.parse(data);
-  users.push(blacklist);
+  users.push(blacklist_db);
   fs.writeFile("./db/blacklist.json", JSON.stringify(users, null, 2), 'utf8', callback);
 });
 

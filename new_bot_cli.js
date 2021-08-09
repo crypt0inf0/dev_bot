@@ -28,9 +28,9 @@ var newUser_db = {
   }
 
 var data = fs.readFileSync('./db/bots.json');
-var usernames= JSON.parse(data);
-usernames.push(newUser_db);
-fs.writeFile("./db/bots.json", JSON.stringify(usernames, null, 2), 'utf8', callback);
+var users= JSON.parse(data);
+users.push(newUser_db);
+fs.writeFile("./db/bots.json", JSON.stringify(users, null, 2), 'utf8', callback);
 
 setTimeout( getBots, 3000) // 3 sec
 

@@ -28,7 +28,7 @@ javalon.getAccounts([process.argv[2]], (err, accounts) => {
   
   newTx = javalon.sign(priv_key, username, newTx)
 
-  var whitelist = {
+  var whitelist_db = {
     _id: _id,
     user: user,
     status: status,
@@ -42,7 +42,7 @@ javalon.getAccounts([process.argv[2]], (err, accounts) => {
 
   var data = fs.readFileSync('./db/whitelist.json');
   var users = JSON.parse(data);
-  users.push(whitelist);
+  users.push(whitelist_db);
   fs.writeFile("./db/whitelist.json", JSON.stringify(users, null, 2), 'utf8', callback);
 })
 
