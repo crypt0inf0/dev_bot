@@ -14,8 +14,8 @@ const cb = (err, res) => console.log("Error: ", err, "Result: ", res)
 
 const api_url = 'https://avalon.d.tube';
 const blacklist_url = 'https://avalonblacklist.nannal.com/status/black';
-const username = 'dtube';
-const priv_key = '34EpMEDFJwKbxaF7FhhLyEe3AhpM4dwHMLVfs4JyRto5';
+const username = 'crypt0inf0';
+const priv_key = '8CXXwVv1LpwjEJtSsu5AF5MTyTtQ7AELP8TDzCjdFkLr';
 
 
 // Check user voting power & bandwidth
