@@ -60,7 +60,7 @@ function checkBlockForContents(txData) {
     // Whitelist
     var whitelist = require('./db/whitelist.json')
     for(let obj of whitelist) {
-      if (obj.user === txData.author){
+      if (obj.username === txData.author){
         vote_vp = obj.vp;
         upvote(txData)
         
