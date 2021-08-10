@@ -29,7 +29,7 @@ javalon.getAccounts(['sperm-bot-01'], (err, accounts) => {
 
   var blacklist_db = {
     _id: _id,
-    user: user,
+    username: user,
     status: status,
     reason: reason,
     vp: vp,

@@ -30,7 +30,7 @@ javalon.getAccounts([process.argv[2]], (err, accounts) => {
 
   var whitelist_db = {
     _id: _id,
-    user: user,
+    username: user,
     status: status,
     reason: reason,
     vp: vp,
