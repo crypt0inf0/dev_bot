@@ -78,7 +78,7 @@ function upvote(txData){
   var author = txData.author;
   var permlink = txData.permlink;
   // Change vote power = 1000;
-  var vp = vote_vp;
+  var vp = parseInt(vote_vp);
   var tag = '';
   // Broadcast vote to blockchain
   var newTx = {
