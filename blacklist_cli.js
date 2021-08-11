@@ -1,17 +1,29 @@
 const javalon = require('javalon')
 const fs = require('fs')
+const yargs = require("yargs")
+
 const callback = (err) => { if (err) { throw err; } console.log("Updated...") };
+
+const options = yargs
+  .usage("Usage: -u <username> -r <reason> -m <minimum_vp> -x <maximum_vp>")
+  .option("u", { alias: "username", describe: "dtube username", type: "string", demandOption: true })
+  .option("r", { alias: "reason", describe: "reason for blacklist", default: "sperm", type: "string", demandOption: true })
+  .option('m', { alias: "minimum_vp", describe: "minimum vp to vote", default: "100", type: "number", demandOption: true })
+  .option('x', { alias: "maximum_vp", describe: "maximum vp to vote", default: "1000", type: "number", demandOption: true })
+.argv;
 
 const username = '';
 const priv_key = '';
 
-javalon.getAccounts(['sperm-bot-01'], (err, accounts) => {
+javalon.getAccounts([options.username], (err, accounts) => {
   // console.log(err, accounts)
   let _id = accounts[0]._id
   let user = accounts[0].name
   let status = 'blacklist'
-  let reason = 'sperm'
-  let vp = 20 // change vp accoding to the user
+  let reason = options.reason
+  // let vp = 20 // change vp accoding to the user
+  let min_vp = options.minimum_vp
+  let max_vp = options.maximum_vp
 
   var newTx = {
     type: javalon.TransactionType.NEW_ACCOUNT,
@@ -20,8 +32,7 @@ javalon.getAccounts(['sperm-bot-01'], (err, accounts) => {
         user: user,
         status: status,
         reason: reason,
-        vp: vp
-
+        // vp: vp
     }
   }
   
@@ -32,7 +43,9 @@ javalon.getAccounts(['sperm-bot-01'], (err, accounts) => {
     username: user,
     status: status,
     reason: reason,
-    vp: vp,
+    // vp: vp,
+    min_vp: min_vp,
+    max_vp: max_vp,
     sender: newTx.sender,
     ts: newTx.ts,
     hash: newTx.hash,
