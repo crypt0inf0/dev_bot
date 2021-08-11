@@ -5,11 +5,11 @@ const yargs = require("yargs")
 const callback = (err) => { if (err) { throw err; } console.log("Updated...") };
 
 const options = yargs
-  .usage("Usage: -u <username> -r <reason> -m <minimum_vp> -x <maximum_vp>")
+  .usage("Usage: -u <username> -r <reason> -m <minimum vp> -x <maximum vp>")
   .option("u", { alias: "username", describe: "dtube username", type: "string", demandOption: true })
   .option("r", { alias: "reason", describe: "reason for whitelist", default: "original dtuber", type: "string", demandOption: true })
-  .option('m', { alias: "minimum_vp", describe: "minimum vp to vote", default: "100",type: "number", demandOption: true })
-  .option('x', { alias: "maximum_vp", describe: "maximum vp to vote", default: "1000", type: "number", demandOption: true })
+  .option('m', { alias: "min_vp", describe: "minimum vp to vote", default: "100",type: "number", demandOption: true })
+  .option('x', { alias: "max_vp", describe: "maximum vp to vote", default: "1000", type: "number", demandOption: true })
 .argv;
 
 const username = 'crypt0inf0';
@@ -22,8 +22,8 @@ javalon.getAccounts([options.username], (err, accounts) => {
   let status = 'whitelist'
   let reason = options.reason
   // let vp = process.argv[3] // change vp accoding to the user
-  let min_vp = options.minimum_vp
-  let max_vp = options.maximum_vp
+  let min_vp = options.min_vp
+  let max_vp = options.max_vp
 
   var newTx = {
     type: javalon.TransactionType.NEW_ACCOUNT,
