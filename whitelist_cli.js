@@ -13,7 +13,7 @@ const options = yargs
 .argv;
 
 const username = 'crypt0inf0';
-const priv_key = '9Wsk1k8E9dJJQdje5AER2y59Bzpn51S4hztT22uGEFp6';
+const priv_key = '8CXXwVv1LpwjEJtSsu5AF5MTyTtQ7AELP8TDzCjdFkLr';
 
 javalon.getAccounts([options.username], (err, accounts) => {
   // console.log(err, accounts)
