@@ -79,7 +79,7 @@ function upvote(txData){
   var author = txData.author;
   var permlink = txData.permlink;
   // Change vote power = 1000;
-  var vp = Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp) // Random VP between min & max
+  var vp = Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp); // Random VP between min & max
   var tag = '';
   // Broadcast vote to blockchain
   var newTx = {
