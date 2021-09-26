@@ -1,0 +1,33 @@
+html
+  head 
+      link(rel='stylesheet', href='./styles/style.css')
+  body
+    block content
+        h1=title
+        form(action="/addUser", name="/addUser", method="post")
+            div.input
+                span.label Username:
+                input(type="text", name="username")
+            div.input   
+                span.label  Status:
+                input(type="radio", name="status", value="blacklist") 
+                | Balcklist
+                input(type="radio", name="status", value="whitelist") 
+                | Whitelist
+                //- input(type="text", name="status")
+            div.input 
+                span.label  Reason: 
+                //- input(type="text", name="reason")
+                select(name="reason", value="", width=500)
+                    each val in ["Original Dtuber" , "Spam" , "NSFW"]
+                        option=val  
+            div.input
+                span.label Minimum VP:
+                input(type="number", name="min_vp", id="min_vp")
+            div.input
+                span.label Maximum VP:
+                input(type="number",name="max_vp", id="max_vp")
+            div.actions
+                input(type="submit", value="Submit")
+        a(href='/')
+            button Back

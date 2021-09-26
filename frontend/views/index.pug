@@ -1,0 +1,42 @@
+doctype html
+html
+    head 
+        link(rel='stylesheet', href='./styles/style.css')
+    body        
+        h2 Simple User Manager
+        
+        div#block
+            a(href='/add')
+                button Add User
+            a(href='/sort')
+                button Sort By Status
+            a(href='/')
+                button View All
+            form(action='/search/', method='post')
+                    input(type='text', id='search', name='search')
+                    button(type='submit') Search
+        
+        table.center
+            tr
+                th #
+                th Username
+                th Status 
+                th Reason
+                th Minimum VP
+                th Maximum VP
+                th Enable/Disable
+                th Action
+            each user, u in users
+                tr  
+                    td #{u + 1}
+                    td #{user.username}
+                    td #{user.status}
+                    td #{user.reason}
+                    td #{user.min_vp}
+                    td #{user.max_vp}
+                    td #{user.active}
+                    td#dat
+                        a(href='/edit/id:' + user.username)
+                            button Edit
+                        form(action="/delete/" + user.username, method='post')
+                            button(type='submit') Delete

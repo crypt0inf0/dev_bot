@@ -1,0 +1,37 @@
+html
+    head 
+        link(rel='stylesheet', href='./styles/style.css')
+    body
+        form(method='post', action='/edit/' + user.username)
+            div
+                label(for='username') Username: 
+                input(id='username', name='username', value=user.username, readonly='')
+            div.input   
+                span.label  Status:
+                input(type="radio", name="status", value="blacklist") 
+                | Balcklist
+                input(type="radio", name="status", value="whitelist", checked) 
+                | Whitelist
+                //- input(type="text", name="status")
+            div.input 
+                span.label  Reason: 
+                //- input(type="text", name="reason")
+                select(name="reason", value="", width=500)
+                    each val in ["Original Dtuber" , "Spam" , "NSFW"]
+                        option=val
+            div
+                label(for='min_vp') Minimum VP: 
+                input(type="number", id='min_vp', name='min_vp', value=user.min_vp)
+            div
+                label(for='max_vp') Maximum VP: 
+                input(type="number", id='max_vp', name='max_vp', value=user.max_vp)
+            div.input   
+                span.label  Active:
+                input(type="radio", name="active", value="enable", checked) 
+                | Enable
+                input(type="radio", name="active", value="disable") 
+                | Disable
+            div 
+                input(type='submit')
+        a(href='/')
+            button Back

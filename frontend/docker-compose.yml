@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  status_server:
+    build: .
+    image: status_server
+    container_name: status_server
+    restart: always
+    env_file: .env
+    # command: node app.js # start status server
+    expose:
+        - 3000
+    ports: 
+        - "3000:3000"
