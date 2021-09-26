@@ -73,7 +73,7 @@ route.post('/addUser', async (req, res) => {
         signature: newTx.signature
     }
     const data = new UserData(user)
-        console.log(data)
+        // console.log(data)
         data.save((err, data) => {
             if (err) throw err
             res.redirect('/')
@@ -136,9 +136,9 @@ route.get('/sort', (req, res) => {
 })
 
 route.get('/edit/:id', (req, res) => {
-    console.log('THIS IS WAT PARAMS ARE BEING PASSED' + req.params.id.substr(3))
+    // console.log('THIS IS WAT PARAMS ARE BEING PASSED' + req.params.id.substr(3))
     UserData.findOne({ username: req.params.id.substr(3) }, (err, data) => {
-      console.log('THIS IS THE FRIKIN DATA' + data)
+      // console.log('THIS IS THE FRIKIN DATA' + data)
       res.render('edit', { user: data })
     })
 })
@@ -151,7 +151,7 @@ route.post('/edit/:id', (req, res) => {
         reason: req.body.reason,
         min_vp: req.body.min_vp,
         max_vp: req.body.max_vp,
-		active: req.body.active
+		    active: req.body.active
     }
     UserData.findOne({ username: user.username }, (err, doc) => {
         if (err) {
@@ -163,7 +163,7 @@ route.post('/edit/:id', (req, res) => {
         doc.reason = user.reason
         doc.min_vp = user.min_vp
         doc.max_vp = user.max_vp
-		doc.active = user.active
+		    doc.active = user.active
         doc.save((err, data) => {
             if (err) throw err
             res.redirect('/')
@@ -173,7 +173,7 @@ route.post('/edit/:id', (req, res) => {
   
 route.post('/delete/:id', (req, res) => {
     const username = req.params.id
-    console.log(username)
+    // console.log(username)
     UserData.findOneAndDelete({ username: username }, (err, data) => {
         if (err) throw err
         console.log(`User removed: ${data}`)

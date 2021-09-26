@@ -14,9 +14,9 @@ const cb = (err, res) => console.log("Error: ", err, "Result: ", res)
 
 const api_url = 'https://avalon.d.tube';
 const blacklist_url = 'https://avalonblacklist.nannal.com/status/black';
+const list_url = 'http://167.172.173.164:3000/api/user/list';
 const username = 'crypt0inf0';
 const priv_key = '8CXXwVv1LpwjEJtSsu5AF5MTyTtQ7AELP8TDzCjdFkLr';
-
 
 // Check user voting power & bandwidth
 axios.get(api_url + '/accounts/' + username).then((user_data) => {
@@ -58,16 +58,17 @@ function checkBlockForContents(txData) {
     })
 
     // Whitelist
-    var whitelist = require('./db/whitelist.json')
-    for(let obj of whitelist) {
-      if (obj.username === txData.author){
-        min_vp = obj.min_vp;
-        max_vp = obj.max_vp;
-        upvote(txData)
-        
-        break;            
+    axios.get(list_url).then(function (list) {
+      for(let obj of list.data) {
+        if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'whitelist'){
+          min_vp = obj.min_vp;
+          max_vp = obj.max_vp;
+          upvote(txData)
+
+          break;      
+        }
       }
-    }
+    })
   }
 }
 

@@ -1,13 +1,19 @@
-version: '3.9'
+version: '3.3'
 
 services:
-  status_server:
+  list_server:
     build: .
-    image: status_server
-    container_name: status_server
+    image: list_server
+    container_name: list_server
     restart: always
+    volumes:
+      - type: bind
+          source: ./
+          target: /app
+          volume:
+            nocopy: true
     env_file: .env
-    # command: node app.js # start status server
+    command: npm start # start status server
     expose:
         - 3000
     ports: 
