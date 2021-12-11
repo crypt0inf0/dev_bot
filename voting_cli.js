@@ -123,7 +123,7 @@ function downvote(txData){
   var permlink = txData.permlink;
   // vote power
 //   var random_vp = Math.floor(Math.floor(Math.random() * 2048) - 2050); // Random num between -2-2050
-  var vp = Math.floor(Math.random() * (max_vp - min_vp + 1) - min_vp); // Random VP between min & max
+  var vp = Math.floor(Math.random() * (min_vp - max_vp + 1) - min_vp); // Random VP between min & max
   var tag = '';
   // Broadcast vote to blockchain
   var newTx = {
