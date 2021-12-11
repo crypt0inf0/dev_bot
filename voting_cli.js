@@ -61,7 +61,7 @@ function checkBlockForContents(txData) {
         if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'blacklist'){
           min_vp = obj.min_vp;
           max_vp = obj.max_vp;
-          upvote(txData)
+          downvote(txData)
 
           break;      
         }
