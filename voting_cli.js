@@ -47,12 +47,23 @@ function checkBlockForContents(txData) {
   if(txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
     
     // Blacklist
-    axios.get(blacklist_url).then(function (blacklist) {
-      for(let obj of blacklist.data) {
-        if (obj.user === txData.author){
-          downvote(txData)
+//     axios.get(blacklist_url).then(function (blacklist) {
+//       for(let obj of blacklist.data) {
+//         if (obj.user === txData.author){
+//           downvote(txData)
 
-          break;            
+//           break;            
+//         }
+//       }
+//     })
+    axios.get(list_url).then(function (list) {
+      for(let obj of list.data) {
+        if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'blacklist'){
+          min_vp = obj.min_vp;
+          max_vp = obj.max_vp;
+          upvote(txData)
+
+          break;      
         }
       }
     })
@@ -111,8 +122,8 @@ function downvote(txData){
   var author = txData.author;
   var permlink = txData.permlink;
   // vote power
-  var random_vp = Math.floor(Math.floor(Math.random() * 2048) - 2050); // Random num between -2-2050
-  var vp = random_vp;
+//   var random_vp = Math.floor(Math.floor(Math.random() * 2048) - 2050); // Random num between -2-2050
+  var vp = Math.floor(Math.random() * (max_vp - min_vp + 1) - min_vp); // Random VP between min & max
   var tag = '';
   // Broadcast vote to blockchain
   var newTx = {
