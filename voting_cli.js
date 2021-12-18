@@ -45,7 +45,8 @@ function checkBlockForContents(txData) {
   var keyCount  = Object.keys(jsonObject).length;
   // check if tnx contain contents. If type = 4, your account will vote on post.
   if(txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
-    
+  
+  autoComment(txData)
     // Blacklist
 //     axios.get(blacklist_url).then(function (blacklist) {
 //       for(let obj of blacklist.data) {
@@ -131,6 +132,39 @@ function downvote(txData){
       data: {
         author: author,
         link: permlink,
+        vt: vp,
+        tag: tag
+      }
+  }
+  // Sign transaction
+  newTx = javalon.sign(priv_key, username, newTx)
+  // Send transaction to blockchain
+  javalon.sendRawTransaction(newTx, function(err, res) {
+      cb(err, res)
+  })
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Commenting  
+function autoComment(txData){
+  console.log('Commenting...',  )
+  try {
+  // Get author of the post
+  var author = txData.author;
+  var permlink = txData.permlink;
+  var comment = "Welcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️"
+  // Change vote power = 1000;
+  var vp = 1500; // Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp); // Random VP between min & max
+  var tag = '';
+  // Broadcast vote to blockchain
+  var newTx = {
+    type: javalon.TransactionType.COMMENT,
+      data: {
+        author: author,
+        link: permlink,
+        description: comment,
         vt: vp,
         tag: tag
       }
