@@ -97,12 +97,12 @@ function upvote(txData){
   // Broadcast vote to blockchain
   var newTx = {
     type: javalon.TransactionType.VOTE,
-      data: {
-        author: author,
-        link: permlink,
-        vt: vp,
-        tag: tag
-      }
+    data: {
+      author: author,
+      link: permlink,
+      vt: vp,
+      tag: tag
+    }
   }
   // Sign transaction
   newTx = javalon.sign(priv_key, username, newTx)
@@ -154,20 +154,25 @@ function autoComment(txData){
   // Get author of the post
   var author = txData.author;
   var permlink = txData.permlink;
-  var comment = "Welcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️"
+  var comment = 'Welcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️'
   // Change vote power = 1000;
   var vp = 1500; // Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp); // Random VP between min & max
   var tag = '';
   // Broadcast vote to blockchain
   var newTx = {
     type: javalon.TransactionType.COMMENT,
-      data: {
-        author: author,
-        link: permlink,
+    data: {
+      pa: author,
+      pp: permlink,
+      json: {
+//         app: 'onelovedtube/feedback',
+        title: '',
         description: comment,
-        vt: vp,
-        tag: tag
-      }
+        refs: []
+      },
+      vt: vp,
+      tag: tag
+    }
   }
   // Sign transaction
   newTx = javalon.sign(priv_key, username, newTx)
