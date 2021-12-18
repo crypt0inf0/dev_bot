@@ -156,7 +156,7 @@ function autoComment(txData){
   var permlink = txData.permlink;
   var comment = '\nWelcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️\n'
   // Change vote power = 1000;
-  var vp = 1500; // Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp); // Random VP between min & max
+  var vp = Math.floor(Math.floor(Math.random() * 1500) + 500); // Random num between 500-1500
   var tag = '';
   // Generate random link
   function generatePermlink() {
