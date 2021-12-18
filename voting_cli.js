@@ -154,14 +154,25 @@ function autoComment(txData){
   // Get author of the post
   var author = txData.author;
   var permlink = txData.permlink;
-  var comment = 'Welcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️'
+  var comment = '\nWelcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️\n'
   // Change vote power = 1000;
   var vp = 1500; // Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp); // Random VP between min & max
   var tag = '';
+  // Generate random link
+  function generatePermlink() {
+    let permlink = ""
+    let possible = "abcdefghijklmnopqrstuvwxyz0123456789"
+    for (let i = 0; i < 8; i++)
+        permlink += possible.charAt(Math.floor(Math.random() * possible.length))
+    return permlink
+  }
+  var commentLink = generatePermlink()
+  console.log(commentLink)
   // Broadcast vote to blockchain
   var newTx = {
     type: javalon.TransactionType.COMMENT,
     data: {
+      link: commentLink,
       pa: author,
       pp: permlink,
       json: {
