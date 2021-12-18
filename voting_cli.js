@@ -16,7 +16,7 @@ const api_url = 'https://avalon.d.tube';
 const blacklist_url = 'https://avalonblacklist.nannal.com/status/black';
 const list_url = 'http://167.172.173.164:3000/api/user/list';
 const username = 'crypt0inf0';
-const priv_key = '8CXXwVv1LpwjEJtSsu5AF5MTyTtQ7AELP8TDzCjdFkLr';
+const priv_key = '7q6Y8rUE5fjPtsgGgkhJGZMdyDyKnWetgWtxFyhCnfAa';
 
 // Check user voting power & bandwidth
 axios.get(api_url + '/accounts/' + username).then((user_data) => {
