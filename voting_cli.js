@@ -47,10 +47,9 @@ function checkBlockForContents(txData) {
   if(txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
   
   // Auto comment
-  if (txData.child.filter(item => item[0] === "crypt0inf0").length > 0){
+  if (txData.child.filter(comment => comment[0] === 'crypt0inf0').length > 0){
     console.log("already commented")
-  }
-  else {
+  } else {
     autoComment(txData)
   }
 
