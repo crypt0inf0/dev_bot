@@ -53,9 +53,9 @@ function checkBlockForContents(txData) {
   var l = comment.length;
 
   for (i = 0; i < l; i++) {
-    if (found[i].indexOf(user) >= 0) {
+    if (comment[i].indexOf(user) >= 0) {
       console.log("already commented")
-    } 
+    }
     else {
       autoComment(txData)
       
