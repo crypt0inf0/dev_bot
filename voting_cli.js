@@ -46,7 +46,23 @@ function checkBlockForContents(txData) {
   // check if tnx contain contents. If type = 4, your account will vote on post.
   if(txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
   
-  autoComment(txData)
+  // Auto comment
+  var comment = txData.child[0];
+  var user = "crypt0inf0";
+  var i = 0;
+  var l = comment.length;
+
+  for (i = 0; i < l; i++) {
+    if (found[i].indexOf(user) >= 0) {
+      console.log("already commented")
+    } 
+    else {
+      autoComment(txData)
+      
+      break;
+    }
+  }
+
     // Blacklist
 //     axios.get(blacklist_url).then(function (blacklist) {
 //       for(let obj of blacklist.data) {
