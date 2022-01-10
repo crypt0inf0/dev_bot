@@ -47,20 +47,11 @@ function checkBlockForContents(txData) {
   if(txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
   
   // Auto comment
-  var comment = txData.child[0];
-  var user = "crypt0inf0";
-  var i = 0;
-  var l = comment.length;
-
-  for (i = 0; i < l; i++) {
-    if (comment[i].indexOf(user) >= 0) {
-      console.log("already commented")
-    }
-    else {
-      autoComment(txData)
-      
-      break;
-    }
+  if (txData.child.filter(item => item[0] === "crypt0inf0").length > 0){
+    console.log("already commented")
+  }
+  else {
+    autoComment(txData)
   }
 
     // Blacklist
