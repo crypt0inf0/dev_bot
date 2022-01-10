@@ -47,11 +47,14 @@ function checkBlockForContents(txData) {
   if(txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
   
   // Auto comment
-  if (txData.child.filter(comment => comment[0] === 'crypt0inf0').length > 0){
-    console.log("already commented")
-  } else {
-    autoComment(txData)
-  }
+  javalon.getContent(txData.author, txData.permlink, (err, post) => {
+    //console.log(post)
+    if (post.child.filter(comment => comment[0] === 'crypt0inf0').length > 0){
+      console.log("already commented")
+    } else {
+      autoComment(txData)
+    }
+})
 
     // Blacklist
 //     axios.get(blacklist_url).then(function (blacklist) {
