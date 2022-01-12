@@ -12,8 +12,8 @@ const list_url = process.env.LIST_URL;
 const username = process.env.USERNAME;
 const priv_key = process.env.PRIV_KEY;
 
-const min_user_vp = process.env.Min_User_VP;
-const min_user_bw = process.env.Min_User_BW;
+const min_user_vp = process.env.MIN_USER_VP;
+const min_user_bw = process.env.MIN_USER_BW;
 
 const delay = process.env.DELAY;
 
