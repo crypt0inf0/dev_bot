@@ -61,7 +61,7 @@ async function validateData() {
                 });
                 
                 //Grab video info & post function
-                // getVideoinfo()
+                getVideoinfo()
             }
         }
     } catch (error) {
