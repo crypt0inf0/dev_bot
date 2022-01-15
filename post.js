@@ -13,9 +13,7 @@ const priv_key = process.env.PRIV_KEY;
 const channel_id = 'UCXuqSBlHAE6Xw-yeJA0Tunw';
 const options = ['--username=user', '--password=hunter2']
 
-let checkFeed = setInterval(() => {
-    validateData();
-}, 5000); 
+validateData(); 
 
 // get youtube channel feed
 async function getFeed() {
