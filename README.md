@@ -10,7 +10,7 @@
 # Program that checks if MySQL is running
 while [ 1 = 1 ]; do
 <your code here>
-sleep 1
+sleep 60
 done
 ```
 ```
