@@ -1,5 +1,4 @@
 const dotenv = require('dotenv')
-const fs = require('fs')
 const javalon = require('javalon')
 const youtubedl = require('youtube-dl')
 const { getChannelFeed } = require('@obg-lab/youtube-channel-feed');
@@ -10,13 +9,14 @@ const cb = (err, res) => console.log("Error: ", err, "Result: ", res)
 const username = process.env.USERNAME;
 const priv_key = process.env.PRIV_KEY;
 
+// Get channel id by finding "externalId" on page source
 const channel_id = 'UCXuqSBlHAE6Xw-yeJA0Tunw';
 const options = ['--username=user', '--password=hunter2']
 
 validateData(); 
 
-// get youtube channel feed
-async function getFeed() {
+// Get youtube channel feed
+async function getYoutubefeed() {
 	try {
 		const feed = await getChannelFeed(channel_id)
 		return feed
@@ -27,43 +27,28 @@ async function getFeed() {
 
 // Get latest video id
 async function getVideoid() {
-	let channel_feed = await getFeed();
+	let channel_feed = await getYoutubefeed();
 	let video_id = channel_feed.feed.entry[0].id[0].split(':')[2];
 	return video_id
 }
 
-// validate data against local db
+// Validate data
 async function validateData() {
 	try{
-		const video_id = await getVideoid();
+		let video_id = await getVideoid();
 		// console.log(video_id)
 		
 		// Check video id against the new video id
-		var youtubeId = require('./db/youtube.json')
-		for(let obj of youtubeId) {
-			if (obj.id === video_id){
-	    		console.log("No new video found.")    
-				break;            
-    		}else {
-                console.log("New video found.")
-                // Wait 1 1 sec before validatiting data from db
-		        // await new Promise(resolve => setTimeout(resolve, 1000));
-		
-		        // Write data into local db
-		        var youtube_data = {
-    		        id: video_id
-  		        };
-		
-                var data = [ youtube_data ];
-                fs.writeFile("./db/youtube.json", JSON.stringify(data, 'utf8', 4), (err) => {
-                    if (err) {  console.error(err);  return; };
-                        console.log("Updating DB...");
-                });
-                
-                //Grab video info & post function
-                getVideoinfo()
-            }
-        }
+		javalon.getDiscussionsByAuthor('clipbytes01', null, null, (err, contents) => {
+			let dtube_id = contents[0].json.files.youtube;
+			if (video_id === dtube_id) {
+				console.log("No new video found")
+				return
+			} else {
+				// Grab video info & post function
+                		getVideoinfo()
+            		}
+        	})
     } catch (error) {
 		console.log(error);
 	}
@@ -72,7 +57,7 @@ async function validateData() {
 async function getVideoinfo() {
 	let video_id = await getVideoid();
 	let url = 'https://youtu.be/' + video_id;
-
+	// Grab youtube video info
 	youtubedl.getInfo(url, options, function(err, info) {
 		if (err) throw err
 
