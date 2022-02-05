@@ -10,7 +10,7 @@ const cb = (err, res) => console.log("Error: ", err, "Result: ", res)
 const username = process.env.USERNAME;
 const priv_key = process.env.PRIV_KEY;
 
-const channel_id = 'UCDR8cvjALazMm2j9hOar8_g';
+const channel_id = 'UCXuqSBlHAE6Xw-yeJA0Tunw';
 const options = ['--username=user', '--password=hunter2']
 
 function intervalFunc() {
