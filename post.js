@@ -39,7 +39,7 @@ async function validate() {
 	video_id = await channel_feed.feed.entry[0].id[0].split(':')[2];
 
 	// Check video id's against the new video id
-	let channel_name = (channel_author.replace(/[^A-Za-z ]/g, ``).trim()).replace(/ /g,"_");
+	let channel_name = (channel_author.replace(/[^A-Za-z0-9 ]/g, ``).trim()).replace(/ /g,"_");
 	// console.log(channel_name)
 	
 	let db_dir = './db/youtube/' + channel_name + '.json';
