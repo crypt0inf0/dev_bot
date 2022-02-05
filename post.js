@@ -21,24 +21,35 @@ function intervalFunc() {
 async function validate() {
 	// Fetch youtube feed
 	const channel_feed = await getChannelFeed(channel_id)
+	let channel_author = await (channel_feed.feed.author[0].name).toString().toLowerCase();
 	video_id = await channel_feed.feed.entry[0].id[0].split(':')[2];
 
 	// Check video id's against the new video id
-	var data = fs.readFileSync('./db/youtube.json');
+	let channel_name = (channel_author.replace(/[^A-Za-z ]/g, ``).trim()).replace(/ /g,"_");
+	// console.log(channel_name)
+	
+	let db_dir = './db/youtube/' + channel_name + '.json';
+	// console.log(db_dir)
+	
+	// Create json file if not exists
+	if (!fs.existsSync(db_dir)){
+   		fs.writeFileSync(db_dir, `[{"id": "UK1hL4k8Zao"}]`); // dummy data
+	}
+	
+	var data = fs.readFileSync(db_dir);
 	var ids = JSON.parse(data);
 				
 	var youtube_data = {
 		id: video_id
 	}
-	
-	// Validate & add data
+				
 	function addDb(youtube_data) {
   		var index = ids.findIndex(o => o.id === video_id)
   		if (index === -1) {
 			post()
 			console.log("New video found.")
 			ids.push(youtube_data);
-			fs.writeFileSync("./db/youtube.json", JSON.stringify(ids, null, 2), 'utf8'), (err) => {
+			fs.writeFileSync(db_dir, JSON.stringify(ids, null, 2), 'utf8'), (err) => {
 				if (err) {  console.error(err);  return; };
 					console.log("Updating DB...");
 				}
