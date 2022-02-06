@@ -6,7 +6,7 @@ const priv_key = process.env.PRIV_KEY;
 
 function intervalFunc() {
 	claimReward();
-}setInterval(intervalFunc, 5000);
+}setInterval(intervalFunc, 180000); // 3 minutes
 
 function claimReward() {
 	javalon.getClaimableVotesByAccount(username, 0, (err, votes) => {
