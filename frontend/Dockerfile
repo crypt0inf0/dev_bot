@@ -2,6 +2,7 @@ FROM node:12
 
 WORKDIR /app
 # ADD . /app
+ADD package.json /app
 RUN npm install
 
 
