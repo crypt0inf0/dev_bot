@@ -1,22 +1,30 @@
 ## Avalon bot's
 
+#### Dependencies
+* [MongoDB](https://mongodb.com)
+* [NodeJS](https://nodejs.org/en/download/) **v12/14/16** (LTS)
+* [Forever](https://www.npmjs.com/package/forever) sudo npm install forever -g
+### Config
+Update your details on `.env` file 
+
 ### Post
-`setInterval` & `Promise` doesn't work well. So for simplicity we use bash command `watch -n 60 'node post.js | tee -a post.txt' &>/dev/null &` which will run every 60 sec.
-
-`watch` command gets exit once we close the terminal so we use while loop & nohup,
+Every 60 seconds post script will fetch youtube channel info & parese for any new videos, If a new video found it will auto post it to dtube.
 
 ```
-#!/bin/bash
-# Program that checks if MySQL is running
-while [ 1 = 1 ]; do
-<your code here>
-sleep 60
-done
+forever start post.js
 ```
+
+### Up/Down Vote & Auto comment
+This script will run every second to fetch any new video on avalon blockchain if so it will auto up/down vote & auto comment on every new videos.
+
 ```
-nohup /path/to/loop_script.sh & > /dev/null
+forever start leader_vote_cli.js
 ```
-To stop the post bot use kill command,
+
+### Claim rewards 
+Every 3 minutes this script will check for any claimable reward available if so this script will auto claim that rewards.
+
 ```
-pkill -9 name_of_the_bash_script
+forever start claim_rewards.js
 ```
+
