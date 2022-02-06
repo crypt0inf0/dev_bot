@@ -15,7 +15,6 @@ const priv_key = process.env.PRIV_KEY;
 const min_user_vp = process.env.MIN_USER_VP;
 const min_user_bw = process.env.MIN_USER_BW;
 
-const delay = process.env.DELAY;
 
 // const api_url = 'https://avalon.d.tube';
 // const blacklist_url = 'https://avalonblacklist.nannal.com/status/black';
@@ -23,29 +22,41 @@ const delay = process.env.DELAY;
 // const username = 'crypt0inf0';
 // const priv_key = '7q6Y8rUE5fjPtsgGgkhJGZMdyDyKnWetgWtxFyhCnfAa';
 
-// Check user voting power & bandwidth
-axios.get(api_url + '/accounts/' + username).then((user_data) => {
-  user_vp = user_data.data[0].vt.v;
-  user_bw = user_data.data[0].bw.v;
-  console.log(user_vp)
-  //Bot starts if condition satisfied
-  if (user_vp >= min_user_vp && user_bw >= min_user_bw){
-    // Avalon stream
-    let streamer = new AvalonStreamer(api_url)
-    streamer.streamBlocks((newBlock) => {
-      let txData = {
-        type: newBlock.txs[0].type,
-        content: newBlock.txs[0].data,
-        author: newBlock.txs[0].sender,
-        permlink: newBlock.txs[0].data.link
-      }
-      let includePosts = checkBlockForContents(txData)
-        if (includePosts) {
-          console.log('POST FOUND: ', txData)
-        }
-    });
 
-    function checkBlockForContents(txData) {
+function intervalFunc() {
+	// Check user voting power & bandwidth
+	axios.get(api_url + '/accounts/' + username).then((user_data) => {
+		var user_vp = user_data.data[0].vt.v;
+		// var user_bw = user_data.data[0].bw.v
+		// console.log(user_vp)
+		
+		if(user_vp > min_user_vp){
+			avalonStream()
+		} else{
+			console.log('You dont have enough voting power/bandwidth');
+			return;
+		}
+	})
+}setInterval(intervalFunc, 1000); // 1 sec
+
+
+function avalonStream() {
+	// Avalon stream
+	let streamer = new AvalonStreamer(api_url)
+  streamer.streamBlocks((newBlock) => {
+    let txData = {
+      type: newBlock.txs[0].type,
+      content: newBlock.txs[0].data,
+      author: newBlock.txs[0].sender,
+      permlink: newBlock.txs[0].data.link
+    }
+    let includePosts = checkBlockForContents(txData)
+      if (includePosts) {
+        console.log('POST FOUND: ', txData)
+      }
+  });
+
+	function checkBlockForContents(txData) {
       // Calculate json length to eliminate comments
       var jsonObject = txData.content;
       var keyCount  = Object.keys(jsonObject).length;
@@ -96,122 +107,119 @@ axios.get(api_url + '/accounts/' + username).then((user_data) => {
           } else {
             autoComment(txData)
           }
-        })
+        })  
       }
     }
-
-    // Upvoting 
-    function upvote(txData){
-      console.log('Upvoting...',  )
-      try {
-      // Get author of the post
-      var author = txData.author;
-      var permlink = txData.permlink;
-      // Change vote power = 1000;
-      var vp = Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp); // Random VP between min & max
-      var tag = '';
-      // Broadcast vote to blockchain
-      var newTx = {
-        type: javalon.TransactionType.VOTE,
-        data: {
-          author: author,
-          link: permlink,
-          vt: vp,
-          tag: tag
-        }
-      }
-      // Sign transaction
-      newTx = javalon.sign(priv_key, username, newTx)
-      // Send transaction to blockchain
-      javalon.sendRawTransaction(newTx, function(err, res) {
-          cb(err, res)
-      })
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    // Downvoting
-    function downvote(txData){
-      console.log('Downvoting...',  )
-      try {
-      // Get author of the post
-      var author = txData.author;
-      var permlink = txData.permlink;
-      // vote power
-      // var random_vp = Math.floor(Math.floor(Math.random() * 2048) - 2050); // Random num between -2-2050
-      var vp = Math.floor(Math.random() * (min_vp - max_vp + 1) - min_vp); // Random VP between min & max
-      var tag = '';
-      // Broadcast vote to blockchain
-      var newTx = {
-          type: javalon.TransactionType.VOTE,
-          data: {
-            author: author,
-            link: permlink,
-            vt: vp,
-            tag: tag
-          }
-      }
-      // Sign transaction
-      newTx = javalon.sign(priv_key, username, newTx)
-      // Send transaction to blockchain
-      javalon.sendRawTransaction(newTx, function(err, res) {
-          cb(err, res)
-      })
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    // Commenting  
-    function autoComment(txData){
-      console.log('Commenting...',  )
-      try {
-      // Get author of the post
-      var author = txData.author;
-      var permlink = txData.permlink;
-      var comment = '\nWelcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️\n'
-      // Change vote power = 1000;
-      var vp = Math.floor(Math.floor(Math.random() * 1500) + 500); // Random num between 500-1500
-      var tag = '';
-      // Generate random link
-      function generatePermlink() {
-        let permlink = ""
-        let possible = "abcdefghijklmnopqrstuvwxyz0123456789"
-        for (let i = 0; i < 8; i++)
-            permlink += possible.charAt(Math.floor(Math.random() * possible.length))
-        return permlink
-      }
-      var commentLink = generatePermlink()
-      // console.log(commentLink)
-      // Broadcast vote to blockchain
-      var newTx = {
-        type: javalon.TransactionType.COMMENT,
-        data: {
-          link: commentLink,
-          pa: author,
-          pp: permlink,
-          json: {
-            // app: 'onelovedtube/feedback',
-            title: '',
-            description: comment,
-            refs: []
-          },
-          vt: vp,
-          tag: tag
-        }
-      }
-      // Sign transaction
-      newTx = javalon.sign(priv_key, username, newTx)
-      // Send transaction to blockchain
-      javalon.sendRawTransaction(newTx, function(err, res) {
-          cb(err, res)
-      })
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  } else {
-      console.log('You dont have enough voting power/bandwidth');       
+}
+    
+// Upvoting 
+function upvote(txData){
+  console.log('Upvoting...',  )
+  try {
+  // Get author of the post
+  var author = txData.author;
+  var permlink = txData.permlink;
+  // Change vote power = 1000;
+  var vp = Math.floor(Math.random() * (max_vp - min_vp + 1) + min_vp); // Random VP between min & max
+  var tag = '';
+  // Broadcast vote to blockchain
+  var newTx = {
+	type: javalon.TransactionType.VOTE,
+	data: {
+	  author: author,
+	  link: permlink,
+	  vt: vp,
+	  tag: tag
+	}
   }
-})
+  // Sign transaction
+  newTx = javalon.sign(priv_key, username, newTx)
+  // Send transaction to blockchain
+  javalon.sendRawTransaction(newTx, function(err, res) {
+	  cb(err, res)
+  })
+  } catch (error) {
+	console.error(error);
+  }
+}
+
+// Downvoting
+function downvote(txData){
+  console.log('Downvoting...',  )
+  try {
+  // Get author of the post
+  var author = txData.author;
+  var permlink = txData.permlink;
+  // vote power
+  // var random_vp = Math.floor(Math.floor(Math.random() * 2048) - 2050); // Random num between -2-2050
+  var vp = Math.floor(Math.random() * (min_vp - max_vp + 1) - min_vp); // Random VP between min & max
+  var tag = '';
+  // Broadcast vote to blockchain
+  var newTx = {
+	  type: javalon.TransactionType.VOTE,
+	  data: {
+		author: author,
+		link: permlink,
+		vt: vp,
+		tag: tag
+	  }
+  }
+  // Sign transaction
+  newTx = javalon.sign(priv_key, username, newTx)
+  // Send transaction to blockchain
+  javalon.sendRawTransaction(newTx, function(err, res) {
+	  cb(err, res)
+  })
+  } catch (error) {
+	console.error(error);
+  }
+}
+
+// Commenting  
+function autoComment(txData){
+  console.log('Commenting...',  )
+  try {
+  // Get author of the post
+  var author = txData.author;
+  var permlink = txData.permlink;
+  var comment = '\nWelcome to dtube, Can you vote me as a leader on https://d.tube/#!/election Thanks ❤️\n'
+  // Change vote power = 1000;
+  var vp = Math.floor(Math.floor(Math.random() * 1500) + 500); // Random num between 500-1500
+  var tag = '';
+  // Generate random link
+  function generatePermlink() {
+	let permlink = ""
+	let possible = "abcdefghijklmnopqrstuvwxyz0123456789"
+	for (let i = 0; i < 8; i++)
+		permlink += possible.charAt(Math.floor(Math.random() * possible.length))
+	return permlink
+  }
+  var commentLink = generatePermlink()
+  // console.log(commentLink)
+  // Broadcast vote to blockchain
+  var newTx = {
+	type: javalon.TransactionType.COMMENT,
+	data: {
+	  link: commentLink,
+	  pa: author,
+	  pp: permlink,
+	  json: {
+		// app: 'onelovedtube/feedback',
+		title: '',
+		description: comment,
+		refs: []
+	  },
+	  vt: vp,
+	  tag: tag
+	}
+  }
+  // Sign transaction
+  newTx = javalon.sign(priv_key, username, newTx)
+  // Send transaction to blockchain
+  javalon.sendRawTransaction(newTx, function(err, res) {
+	  cb(err, res)
+  })
+  } catch (error) {
+	console.error(error);
+  }
+}
