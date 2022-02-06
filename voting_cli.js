@@ -8,7 +8,7 @@ const cb = (err, res) => console.log("Error: ", err, "Result: ", res);
 
 const api_url = process.env.API_URL;
 const blacklist_url = process.env.BLACKLIST_URL;
-const list_url = process.env.LIST_URL;
+const user_list_url = process.env.USER_LIST_URL;
 const username = process.env.USERNAME;
 const priv_key = process.env.PRIV_KEY;
 
@@ -36,7 +36,7 @@ function intervalFunc() {
 		}
 	})
 }
-setInterval(intervalFunc, 1000);
+setInterval(intervalFunc, 1000); // 1 sec
 
 
 function avalonStream() {
@@ -71,7 +71,7 @@ function avalonStream() {
 			//     }
 			//   }
 			// })
-			axios.get(list_url).then(function(list) {
+			axios.get(user_list_url).then(function(list) {
 				for (let obj of list.data) {
 					if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'blacklist') {
 						min_vp = obj.min_vp;
@@ -84,7 +84,7 @@ function avalonStream() {
 			})
 
 			// Whitelist
-			axios.get(list_url).then(function(list) {
+			axios.get(user_list_url).then(function(list) {
 				for (let obj of list.data) {
 					if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'whitelist') {
 						min_vp = obj.min_vp;
@@ -96,7 +96,7 @@ function avalonStream() {
 				}
 			})
 
-			// Auto comment
+			// Auto comment on every new video
 			javalon.getContent(txData.author, txData.permlink, (err, post) => {
 				//console.log(post)
 				if (post.child.filter(comment => comment[0] === 'crypt0inf0').length > 0) {
