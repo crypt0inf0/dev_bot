@@ -41,8 +41,8 @@ const min_user_bw = process.env.MIN_USER_BW;
 function intervalFunc() {
 	// Check user voting power & bandwidth
 	axios.get(api_url + '/accounts/' + username).then((user_data) => {
-		var user_vp = user_data.data[0].vt.v; // VP gets updated only if any new tx on user account available
-		// var user_bw = user_data.data[0].bw.v
+		var user_vp = user_data.data[0].vt.v; // VP gets updated only if any new tx on user account
+		// var user_bw = user_data.data[0].bw.v // BW gets updated only if any new tx on user account
 		// console.log(user_vp)
 
 		if (user_vp > min_user_vp) {
