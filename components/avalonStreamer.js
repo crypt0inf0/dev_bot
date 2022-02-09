@@ -1,12 +1,11 @@
 const axios = require('axios')
 
 module.exports = class {
-    constructor(api,username,irreversible) {
+    constructor(api,irreversible) {
         this.headBlock = 0
         this.unparsedBlocks = 0
         this.fetchingBlock = false
         this.api = api
-        this.username = username
     }
 
     streamBlocks (cb) {
@@ -32,17 +31,9 @@ module.exports = class {
                 }).catch(() => this.fetchingBlock = false)
             }
         },1000)
-		
-		// Stream user info
-		setInterval(() => {
-			axios.get(this.api + '/accounts/' + (this.username)).then((accountInfo) => {
-				cb(accountInfo.data)
-			}).catch(() => {})
-		},1000)
     }
 
     streamTransactions(cb) {
         this.streamBlocks(newBlock)
-		this.streamBlocks(accountInfo)
     }
 }
