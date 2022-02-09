@@ -22,18 +22,18 @@ const min_user_bw = process.env.MIN_USER_BW;
 // const priv_key = '7q6Y8rUE5fjPtsgGgkhJGZMdyDyKnWetgWtxFyhCnfAa';
 
 function intervalFunc() {
-	// Check user voting power & bandwidth
-	axios.get(api_url + '/accounts/' + username).then((user_data) => {
-		var user_vp = user_data.data[0].vt.v;
-		// var user_bw = user_data.data[0].bw.v
-		// console.log(user_vp)
-
-		if (user_vp > min_user_vp) {
-			avalonStream()
-		} else {
-			console.log('You dont have enough voting power/bandwidth');
-			return;
-		}
+        // Check user voting power & bandwidth
+       javalon.getAccount(username, (err, account) => {
+	       let user_vp = javalon.votingPower(account);
+// 	       let user_bw = javalon.bandwidth(account);
+// 	       console.log(user_vp);
+	       
+	       if (user_vp > min_user_vp) {
+		       avalonStream()
+                } else {
+                       console.log('You dont have enough voting power/bandwidth');
+                       return;
+                }
 	})
 }
 setInterval(intervalFunc, 1000); // 1 sec
