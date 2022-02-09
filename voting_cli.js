@@ -111,7 +111,7 @@ function checkBlockForContents(txData) {
 		// Auto comment
 		javalon.getContent(txData.author, txData.permlink, (err, post) => {
 			//console.log(post)
-			if (post.child.filter(comment => comment[0] === 'crypt0inf0').length > 0) {
+			if (post.child.filter(comment => comment[0] === username).length > 0) {
 				console.log("already commented");
 			} else {
 				autoComment(txData);
