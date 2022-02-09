@@ -22,21 +22,43 @@ const min_user_bw = process.env.MIN_USER_BW;
 // const priv_key = '7q6Y8rUE5fjPtsgGgkhJGZMdyDyKnWetgWtxFyhCnfAa';
 
 // Check voting power & bandwidth
-const streamer = new AvalonStreamer(api_url,username);
-	streamer.streamBlocks((accountInfo) => {
-		let user_vp = accountInfo[0].vt.v;
-		let user_bw = accountInfo[0].bw.v;
-		
-		if(user_vp > min_user_vp && user_bw > min_user_bw){
+// function intervalFunc() {
+//         // Check user voting power & bandwidth
+//        javalon.getAccount(username, (err, account) => {
+// 	       let user_vp = javalon.votingPower(account);
+// // 	       let user_bw = javalon.bandwidth(account);
+// // 	       console.log(user_vp);
+	       
+// 	       if (user_vp > min_user_vp) {
+// 		       avalonStream();
+//                 } else {
+//                        console.log('You dont have enough voting power/bandwidth');
+//                        return;
+//                 }
+// 	})
+// }
+// setInterval(intervalFunc, 1000); // 1 sec
+
+function intervalFunc() {
+	// Check user voting power & bandwidth
+	axios.get(api_url + '/accounts/' + username).then((user_data) => {
+		var user_vp = user_data.data[0].vt.v; // VP gets updated only if any new tx on user account
+		// var user_bw = user_data.data[0].bw.v; // BW gets updated only if any new tx on user account
+		// console.log(user_vp);
+
+		if (user_vp > min_user_vp) {
 			avalonStream();
-		}else {
-			console.log("You don't have enough voting power/bandwidth");
+		} else {
+			console.log('You dont have enough voting power/bandwidth');
 			return;
 		}
-	});
+	})
+}
+setInterval(intervalFunc, 1000); // 1 sec
 
 // Avalon stream
 function avalonStream() {
+	var streamer = new AvalonStreamer(api_url,username);
 	streamer.streamBlocks((newBlock) => {
 		let txData = {
 			type: newBlock.txs[0].type,
