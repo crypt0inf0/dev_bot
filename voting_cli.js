@@ -21,44 +21,22 @@ const min_user_bw = process.env.MIN_USER_BW;
 // const username = 'crypt0inf0';
 // const priv_key = '7q6Y8rUE5fjPtsgGgkhJGZMdyDyKnWetgWtxFyhCnfAa';
 
-// function intervalFunc() {
-//         // Check user voting power & bandwidth
-//        javalon.getAccount(username, (err, account) => {
-// 	       let user_vp = javalon.votingPower(account);
-// // 	       let user_bw = javalon.bandwidth(account);
-// // 	       console.log(user_vp);
-	       
-// 	       if (user_vp > min_user_vp) {
-// 		       avalonStream()
-//                 } else {
-//                        console.log('You dont have enough voting power/bandwidth');
-//                        return;
-//                 }
-// 	})
-// }
-// setInterval(intervalFunc, 1000); // 1 sec
-
-function intervalFunc() {
-	// Check user voting power & bandwidth
-	axios.get(api_url + '/accounts/' + username).then((user_data) => {
-		var user_vp = user_data.data[0].vt.v; // VP gets updated only if any new tx on user account
-		// var user_bw = user_data.data[0].bw.v // BW gets updated only if any new tx on user account
-		// console.log(user_vp)
-
-		if (user_vp > min_user_vp) {
-			avalonStream()
-		} else {
-			console.log('You dont have enough voting power/bandwidth');
+// Check voting power & bandwidth
+const streamer = new AvalonStreamer(api_url,username);
+	streamer.streamBlocks((accountInfo) => {
+		let user_vp = accountInfo[0].vt.v;
+		let user_bw = accountInfo[0].bw.v;
+		
+		if(user_vp > min_user_vp && user_bw > min_user_bw){
+			avalonStream();
+		}else {
+			console.log("You don't have enough voting power/bandwidth");
 			return;
 		}
-	})
-}
-setInterval(intervalFunc, 1000); // 1 sec
+	});
 
-
+// Avalon stream
 function avalonStream() {
-	// Avalon stream
-	let streamer = new AvalonStreamer(api_url)
 	streamer.streamBlocks((newBlock) => {
 		let txData = {
 			type: newBlock.txs[0].type,
@@ -69,66 +47,60 @@ function avalonStream() {
 
 		checkBlockForContents(txData);
 	});
+}
 
-	function checkBlockForContents(txData) {
-		// Calculate json length to eliminate comments
-		var jsonObject = txData.content;
-		var keyCount = Object.keys(jsonObject).length;
-		// check if tnx contain contents. If type = 4, your account will vote on post.
-		if (txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
+function checkBlockForContents(txData) {
+	// Calculate json length to eliminate comments
+	let jsonObject = txData.content;
+	let keyCount = Object.keys(jsonObject).length;
+	// Check if tnx contain contents. If type = 4, your account will vote on post.
+	if (txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
 
+		// Blacklist
+		// axios.get(blacklist_url).then(function (blacklist) {
+		//   for(let obj of blacklist.data) {
+		//     if (obj.user === txData.author){
+		//       downvote(txData)
 
-			// Blacklist
-			// axios.get(blacklist_url).then(function (blacklist) {
-			//   for(let obj of blacklist.data) {
-			//     if (obj.user === txData.author){
-			//       downvote(txData)
+		//       break;            
+		//     }
+		//   }
+		// })
+		
+		// Fetch white/black list users from api	
+		axios.get(list_url).then((list) => {
+			for (let obj of list.data) {
+				if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'blacklist') {
+					min_vp = obj.min_vp;
+					max_vp = obj.max_vp;
+					downvote(txData);
 
-			//       break;            
-			//     }
-			//   }
-			// })
-			axios.get(user_list_url).then(function(list) {
-				for (let obj of list.data) {
-					if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'blacklist') {
-						min_vp = obj.min_vp;
-						max_vp = obj.max_vp;
-						downvote(txData)
+					break;
+				}else if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'whitelist') {
+					min_vp = obj.min_vp;
+					max_vp = obj.max_vp;
+					upvote(txData);
 
-						break;
-					}
+					break;
 				}
-			})
+			}
+		}).catch((e) => {console.error(e)});
 
-			// Whitelist
-			axios.get(user_list_url).then(function(list) {
-				for (let obj of list.data) {
-					if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'whitelist') {
-						min_vp = obj.min_vp;
-						max_vp = obj.max_vp;
-						upvote(txData)
-
-						break;
-					}
-				}
-			})
-
-			// Auto comment on every new video
-			javalon.getContent(txData.author, txData.permlink, (err, post) => {
-				//console.log(post)
-				if (post.child.filter(comment => comment[0] === 'crypt0inf0').length > 0) {
-					console.log("already commented")
-				} else {
-					autoComment(txData)
-				}
-			})
-		}
+		// Auto comment
+		javalon.getContent(txData.author, txData.permlink, (err, post) => {
+			//console.log(post)
+			if (post.child.filter(comment => comment[0] === 'crypt0inf0').length > 0) {
+				console.log("already commented");
+			} else {
+				autoComment(txData);
+			}
+		})
 	}
 }
 
 // Upvoting 
 function upvote(txData) {
-	console.log('Upvoting...', )
+	console.log('Upvoting...', );
 	try {
 		// Get author of the post
 		var author = txData.author;
@@ -145,13 +117,13 @@ function upvote(txData) {
 				vt: vp,
 				tag: tag
 			}
-		}
+		};
 		// Sign transaction
-		newTx = javalon.sign(priv_key, username, newTx)
+		newTx = javalon.sign(priv_key, username, newTx);
 		// Send transaction to blockchain
 		javalon.sendRawTransaction(newTx, function(err, res) {
 			cb(err, res)
-		})
+		});
 	} catch (error) {
 		console.error(error);
 	}
@@ -159,7 +131,7 @@ function upvote(txData) {
 
 // Downvoting
 function downvote(txData) {
-	console.log('Downvoting...', )
+	console.log('Downvoting...', );
 	try {
 		// Get author of the post
 		var author = txData.author;
@@ -177,13 +149,13 @@ function downvote(txData) {
 				vt: vp,
 				tag: tag
 			}
-		}
+		};
 		// Sign transaction
-		newTx = javalon.sign(priv_key, username, newTx)
+		newTx = javalon.sign(priv_key, username, newTx);
 		// Send transaction to blockchain
 		javalon.sendRawTransaction(newTx, function(err, res) {
 			cb(err, res)
-		})
+		});
 	} catch (error) {
 		console.error(error);
 	}
@@ -191,7 +163,7 @@ function downvote(txData) {
 
 // Commenting  
 function autoComment(txData) {
-	console.log('Commenting...', )
+	console.log('Commenting...', );
 	try {
 		// Get author of the post
 		var author = txData.author;
@@ -202,13 +174,13 @@ function autoComment(txData) {
 		var tag = '';
 		// Generate random link
 		function generatePermlink() {
-			let permlink = ""
+			let permlink = "";
 			let possible = "abcdefghijklmnopqrstuvwxyz0123456789"
 			for (let i = 0; i < 8; i++)
 				permlink += possible.charAt(Math.floor(Math.random() * possible.length))
-			return permlink
+			return permlink;
 		}
-		var commentLink = generatePermlink()
+		var commentLink = generatePermlink();
 		// console.log(commentLink)
 		// Broadcast vote to blockchain
 		var newTx = {
@@ -226,13 +198,13 @@ function autoComment(txData) {
 				vt: vp,
 				tag: tag
 			}
-		}
+		};
 		// Sign transaction
-		newTx = javalon.sign(priv_key, username, newTx)
+		newTx = javalon.sign(priv_key, username, newTx);
 		// Send transaction to blockchain
 		javalon.sendRawTransaction(newTx, function(err, res) {
 			cb(err, res)
-		})
+		});
 	} catch (error) {
 		console.error(error);
 	}
