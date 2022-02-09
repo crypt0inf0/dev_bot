@@ -17,7 +17,7 @@ const min_user_bw = process.env.MIN_USER_BW;
 
 // const api_url = 'https://avalon.d.tube';
 // const blacklist_url = 'https://avalonblacklist.nannal.com/status/black';
-// const list_url = 'http://167.172.173.164:3000/api/user/list';
+// const user_list_url = 'http://167.172.173.164:3000/api/user/list';
 // const username = 'crypt0inf0';
 // const priv_key = '7q6Y8rUE5fjPtsgGgkhJGZMdyDyKnWetgWtxFyhCnfAa';
 
@@ -68,7 +68,7 @@ function checkBlockForContents(txData) {
 		// })
 		
 		// Fetch white/black list users from api	
-		axios.get(list_url).then((list) => {
+		axios.get(user_list_url).then((list) => {
 			for (let obj of list.data) {
 				if (obj.active == 'enable' && obj.username == txData.author && obj.status == 'blacklist') {
 					min_vp = obj.min_vp;
