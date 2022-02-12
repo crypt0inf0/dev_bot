@@ -13,6 +13,9 @@ const api_url = 'https://avalon.d.tube';
 const username = process.env.USERNAME;
 const priv_key = process.env.PRIV_KEY;
 
+const min_user_vp = process.env.MIN_USER_VP;
+const min_user_bw = process.env.MIN_USER_BW;
+
 const channel_id = 'UCXuqSBlHAE6Xw-yeJA0Tunw';
 const options = ['--username=user', '--password=hunter2']
 
@@ -20,16 +23,16 @@ function intervalFunc() {
 	// Check VP
 	axios.get(api_url + '/accounts/' + username).then((user_data) => {
 		var user_vp = user_data.data[0].vt.v;
-		// var user_bw = user_data.data[0].bw.v
+		var user_bw = user_data.data[0].bw.v
 		// console.log(user_vp)
 		
-		if(user_vp > 5000){ // Required VP amount ie. 5000 VP
+		if(user_vp > min_user_vp && user_bw > min_user_bw) { // Required VP amount ie. 5000 VP
 			validate()
 		} else{
 			return;
 		}
 	})
-}setInterval(intervalFunc, 60000);
+}setInterval(intervalFunc, 60000); // 1 min
 
 
 async function validate() {
