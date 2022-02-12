@@ -39,26 +39,27 @@ const min_user_bw = process.env.MIN_USER_BW;
 // }
 // setInterval(intervalFunc, 1000); // 1 sec
 
-function intervalFunc() {
-	// Check user voting power & bandwidth
-	axios.get(api_url + '/accounts/' + username).then((user_data) => {
-		var user_vp = user_data.data[0].vt.v; // VP gets updated only if any new tx on user account
-		// var user_bw = user_data.data[0].bw.v; // BW gets updated only if any new tx on user account
-		// console.log(user_vp);
-
-		if (user_vp > min_user_vp) {
-			avalonStream();
-		} else {
-			console.log('You dont have enough voting power/bandwidth');
-			return;
-		}
-	})
+check()
+function check() {
+    setInterval(() => {
+        axios.get(api_url + '/accounts/' + username).then((user_data) => {
+            var user_vp = user_data.data[0].vt.v; // VP gets updated only if any new tx on user account
+            var user_bw = user_data.data[0].bw.v; // BW gets updated only if any new tx on user account
+            console.log(user_vp);
+    
+            if (user_vp > min_user_vp && user_bw > min_user_bw) {
+                avalonStream();
+            } else {
+                console.log('You dont have enough voting power/bandwidth');
+                return;
+            }
+        }).catch(() => {})
+    }, 1 * 60 * 1000) // 1 min
 }
-setInterval(intervalFunc, 1000); // 1 sec
 
 // Avalon stream
 function avalonStream() {
-	var streamer = new AvalonStreamer(api_url,username);
+	var streamer = new AvalonStreamer(api_url);
 	streamer.streamBlocks((newBlock) => {
 		let txData = {
 			type: newBlock.txs[0].type,
