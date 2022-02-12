@@ -39,6 +39,7 @@ const min_user_bw = process.env.MIN_USER_BW;
 // }
 // setInterval(intervalFunc, 1000); // 1 sec
 
+// Check voting power & bandwidth
 check()
 function check() {
     setInterval(() => {
