@@ -51,21 +51,23 @@ const min_user_bw = process.env.MIN_USER_BW;
 function checkBalance(i) {
     setTimeout(() => {
 		axios.get(apis[i] + '/accounts/' + username).then((user_data) => {
-			// VP & BW gets updated only on every new txs
+			// VP & BW gets updated only on every new txs made by you
 			var user_vp = user_data.data[0].vt.v;
 			var user_bw = user_data.data[0].bw.v;
 			// console.log(user_vp);
 			
 			if (user_vp > min_user_vp && user_bw > min_user_bw) {
-				clearInterval(streamer);
+				clearTimeout(avalonVar);
 			} else {
+				isBalanceAvailable = true;
+				clearTimeout(avalonVar);
 				console.log("You don't have enough voting power/bandwidth");
 				return;
 			}
-		}).catch(e => {console.error(e)})
+		}).catch(e => {console.error(e)});
 		
 		if(i >= apis.length - 1){
-			checkBalance(0)
+			checkBalance(0);
 		}else {
 			checkBalance(++i);
 		}
@@ -75,17 +77,25 @@ function checkBalance(i) {
 checkBalance(0);
 
 // Avalon stream
-var streamer = new AvalonStreamer(api_url);
-streamer.streamBlocks((newBlock) => {
-	let txData = {
-		type: newBlock.txs[0].type,
-		content: newBlock.txs[0].data,
-		author: newBlock.txs[0].sender,
-		permlink: newBlock.txs[0].data.link
-	}
+avalonVar = setTimeout(avalonStream, 100);
+let isBalanceAvailable = false;
+function avalonStream() {
+	var streamer = new AvalonStreamer(api_url);
+	streamer.streamBlocks((newBlock) => {
+		if (isBalanceAvailable) {
+			return;
+		}
+		
+		let txData = {
+			type: newBlock.txs[0].type,
+			content: newBlock.txs[0].data,
+			author: newBlock.txs[0].sender,
+			permlink: newBlock.txs[0].data.link
+		}
 
-	checkBlockForContents(txData);
-});
+		checkBlockForContents(txData);
+	});
+}
 
 
 function checkBlockForContents(txData) {
