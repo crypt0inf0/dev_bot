@@ -69,7 +69,7 @@ function checkBalance(i) {
 		}else {
 			checkBalance(++i);
 		}
-    }, 60 * 1000); // 1 min
+    }, 1 * 60 * 60 * 1000); // 1 hour
 }
 
 checkBalance(0);
