@@ -18,7 +18,7 @@ module.exports = class {
                     else
                         this.unparsedBlocks = bHeight.data.count - this.headBlock
             }).catch(() => {})
-        },1000)
+        },1500)
     
         setInterval(() => {
             if (this.unparsedBlocks > 0 && !this.fetchingBlock) {
@@ -30,7 +30,7 @@ module.exports = class {
                     cb(newBlock.data)
                 }).catch(() => this.fetchingBlock = false)
             }
-        },1000)
+        },500)
     }
 
     streamTransactions(cb) {
