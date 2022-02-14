@@ -51,6 +51,7 @@ const min_user_bw = process.env.MIN_USER_BW;
 function checkBalance(i) {
     setTimeout(() => {
 		axios.get(apis[i] + '/accounts/' + username).then((user_data) => {
+			// VP & BW gets updated only on every new txs
 			var user_vp = user_data.data[0].vt.v;
 			var user_bw = user_data.data[0].bw.v;
 			// console.log(user_vp);
