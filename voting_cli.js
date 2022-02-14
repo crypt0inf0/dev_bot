@@ -6,6 +6,14 @@ const javalon = require('javalon');
 dotenv.config({ path: '.env'});
 const cb = (err, res) => console.log("Error: ", err, "Result: ", res);
 
+const apis = [
+	'https://avalon.tibfox.com',
+    'https://avalon.d.tube',
+    'https://dtube.club/mainnetapi',
+    // 'https://avalon.oneloved.tube',
+    'https://dtube.fso.ovh'
+]
+
 const api_url = process.env.API_URL;
 const blacklist_url = process.env.BLACKLIST_URL;
 const user_list_url = process.env.USER_LIST_URL;
@@ -40,38 +48,44 @@ const min_user_bw = process.env.MIN_USER_BW;
 // setInterval(intervalFunc, 1000); // 1 sec
 
 // Check voting power & bandwidth
-check()
-function check() {
-    setInterval(() => {
-        axios.get(api_url + '/accounts/' + username).then((user_data) => {
-            var user_vp = user_data.data[0].vt.v; // VP gets updated only if any new tx on user account
-            var user_bw = user_data.data[0].bw.v; // BW gets updated only if any new tx on user account
-            console.log(user_vp);
-    
-            if (user_vp > min_user_vp && user_bw > min_user_bw) {
-                avalonStream();
-            } else {
-                console.log('You dont have enough voting power/bandwidth');
-                return;
-            }
-        }).catch(() => {})
-    }, 1 * 60 * 1000) // 1 min
+function checkBalance(i) {
+    setTimeout(() => {
+		axios.get(apis[i] + '/accounts/' + username).then((user_data) => {
+			var user_vp = user_data.data[0].vt.v;
+			var user_bw = user_data.data[0].bw.v;
+			// console.log(user_vp);
+			
+			if (user_vp > min_user_vp && user_bw > min_user_bw) {
+				clearInterval(streamer);
+			} else {
+				console.log("You don't have enough voting power/bandwidth");
+				return;
+			}
+		}).catch(e => {console.error(e)})
+		
+		if(i >= apis.length - 1){
+			checkBalance(0)
+		}else {
+			checkBalance(++i);
+		}
+    }, 60 * 1000); // 1 min
 }
+
+checkBalance(0);
 
 // Avalon stream
-function avalonStream() {
-	var streamer = new AvalonStreamer(api_url);
-	streamer.streamBlocks((newBlock) => {
-		let txData = {
-			type: newBlock.txs[0].type,
-			content: newBlock.txs[0].data,
-			author: newBlock.txs[0].sender,
-			permlink: newBlock.txs[0].data.link
-		}
+var streamer = new AvalonStreamer(api_url);
+streamer.streamBlocks((newBlock) => {
+	let txData = {
+		type: newBlock.txs[0].type,
+		content: newBlock.txs[0].data,
+		author: newBlock.txs[0].sender,
+		permlink: newBlock.txs[0].data.link
+	}
 
-		checkBlockForContents(txData);
-	});
-}
+	checkBlockForContents(txData);
+});
+
 
 function checkBlockForContents(txData) {
 	// Calculate json length to eliminate comments
