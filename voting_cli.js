@@ -57,6 +57,7 @@ function checkBalance(i) {
 			// console.log(user_vp);
 			
 			if (user_vp > min_user_vp && user_bw > min_user_bw) {
+				isBalanceAvailable = false;
 				clearTimeout(avalonVar);
 			} else {
 				isBalanceAvailable = true;
@@ -78,7 +79,7 @@ checkBalance(0);
 
 // Avalon stream
 avalonVar = setTimeout(avalonStream, 100);
-let isBalanceAvailable = false;
+// let isBalanceAvailable = false;
 function avalonStream() {
 	var streamer = new AvalonStreamer(api_url);
 	streamer.streamBlocks((newBlock) => {
