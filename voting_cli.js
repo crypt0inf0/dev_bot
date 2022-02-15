@@ -48,8 +48,7 @@ function checkBalance(i) {
 		}else {
 			checkBalance(++i);
 		}
-    }, 1 * 60 * 60 * 1000); // 1 hour
-}
+    }, 30 * 60 * 1000); // 30 min
 
 checkBalance(0);
 
