@@ -23,30 +23,6 @@ const priv_key = process.env.PRIV_KEY;
 const min_user_vp = process.env.MIN_USER_VP;
 const min_user_bw = process.env.MIN_USER_BW;
 
-// const api_url = 'https://avalon.d.tube';
-// const blacklist_url = 'https://avalonblacklist.nannal.com/status/black';
-// const user_list_url = 'http://167.172.173.164:3000/api/user/list';
-// const username = 'crypt0inf0';
-// const priv_key = '7q6Y8rUE5fjPtsgGgkhJGZMdyDyKnWetgWtxFyhCnfAa';
-
-// Check voting power & bandwidth
-// function intervalFunc() {
-//         // Check user voting power & bandwidth
-//        javalon.getAccount(username, (err, account) => {
-// 	       let user_vp = javalon.votingPower(account);
-// // 	       let user_bw = javalon.bandwidth(account);
-// // 	       console.log(user_vp);
-	       
-// 	       if (user_vp > min_user_vp) {
-// 		       avalonStream();
-//                 } else {
-//                        console.log('You dont have enough voting power/bandwidth');
-//                        return;
-//                 }
-// 	})
-// }
-// setInterval(intervalFunc, 1000); // 1 sec
-
 // Check voting power & bandwidth
 function checkBalance(i) {
     setTimeout(() => {
@@ -57,10 +33,10 @@ function checkBalance(i) {
 			// console.log(user_vp);
 			
 			if (user_vp > min_user_vp && user_bw > min_user_bw) {
-				isBalanceAvailable = false;
+				isBalanceAvailable = true;
 				clearTimeout(avalonVar);
 			} else {
-				isBalanceAvailable = true;
+				isBalanceAvailable = false;
 				clearTimeout(avalonVar);
 				console.log("You don't have enough voting power/bandwidth");
 				return;
@@ -79,11 +55,10 @@ checkBalance(0);
 
 // Avalon stream
 avalonVar = setTimeout(avalonStream, 100);
-// let isBalanceAvailable = false;
 function avalonStream() {
 	var streamer = new AvalonStreamer(api_url);
 	streamer.streamBlocks((newBlock) => {
-		if (isBalanceAvailable) {
+		if (!isBalanceAvailable) {
 			return;
 		}
 		
@@ -104,19 +79,7 @@ function checkBlockForContents(txData) {
 	let jsonObject = txData.content;
 	let keyCount = Object.keys(jsonObject).length;
 	// Check if tnx contain contents. If type = 4, your account will vote on post.
-	if (txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}
-
-		// Blacklist
-		// axios.get(blacklist_url).then(function (blacklist) {
-		//   for(let obj of blacklist.data) {
-		//     if (obj.user === txData.author){
-		//       downvote(txData)
-
-		//       break;            
-		//     }
-		//   }
-		// })
-		
+	if (txData.type == 4 && keyCount == 4) { // ie. keyCount = 4 {post} | keyCount = 6 {comment}	
 		// Fetch white/black list users from api	
 		axios.get(user_list_url).then((list) => {
 			for (let obj of list.data) {
