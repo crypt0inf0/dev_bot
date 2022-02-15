@@ -34,10 +34,8 @@ function checkBalance(i) {
 			
 			if (user_vp > min_user_vp && user_bw > min_user_bw) {
 				isBalanceAvailable = true;
-				clearTimeout(avalonVar);
 			} else {
 				isBalanceAvailable = false;
-				clearTimeout(avalonVar);
 				console.log("You don't have enough voting power/bandwidth");
 				return;
 			}
@@ -53,7 +51,11 @@ function checkBalance(i) {
 checkBalance(0);
 
 // Avalon stream
-avalonVar = setTimeout(avalonStream, 100);
+var timeout = setTimeout(() => {
+	avalonStream();
+	clearTimeout(timeout);
+}, 0);
+
 function avalonStream() {
 	var streamer = new AvalonStreamer(api_url);
 	streamer.streamBlocks((newBlock) => {
