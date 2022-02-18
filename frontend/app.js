@@ -4,7 +4,7 @@ const route = require('./routers/user')
 const connectDB = require('./connection')
 require('dotenv').config()
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 3030
 
 // app setup
 const app = express();
