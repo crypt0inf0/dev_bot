@@ -15,3 +15,4 @@ docker-compose up -d
 ```
 
 Once its up & running, You can access the frontend from http://localhost:3030
+![image](https://user-images.githubusercontent.com/84570125/154627488-fca06330-ea34-42a0-bc31-015d12f18a1b.png)
