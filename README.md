@@ -29,7 +29,7 @@ forever start claim_rewards.js
 ```
 
 ### Donate
-If you like my bot donate some DTC, HIVE, BLURT `crypt0inf0`
+If you like my bot donate some DTC, HIVE, BLURT `@crypt0inf0`
 * [DTUBE](https://d.tube/#!/c/crypt0inf0)
 * [HIVE](https://hive.blog/@crypt0inf0)
 * [BLURT](https://blurt.blog/@crypt0inf0)
