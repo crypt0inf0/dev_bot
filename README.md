@@ -18,7 +18,7 @@ forever start post.js
 This script will run every second to fetch any new video on avalon blockchain if so it will auto up/down vote & auto comment on every new videos.
 
 ```
-forever start leader_vote_cli.js
+forever start voting_cli.js
 ```
 
 ### Claim rewards 
