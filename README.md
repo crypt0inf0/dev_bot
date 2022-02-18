@@ -7,6 +7,11 @@
 ### Config
 Update your details on `.env` file 
 
+### Install npm packages
+```
+cd dev_bot
+npm install
+```
 ### Post
 Every 60 seconds post script will fetch youtube channel info & parese for any new videos, If a new video found it will auto post it to dtube.
 
