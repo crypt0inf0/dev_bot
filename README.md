@@ -28,3 +28,8 @@ Every 3 minutes this script will check for any claimable reward available if so 
 forever start claim_rewards.js
 ```
 
+### Donate
+If you like my bot donate some DTC, HIVE, BLURT.
+* [DTUBE](https://d.tube/#!/c/crypt0inf0)
+* [HIVE](https://hive.blog/@crypt0inf0)
+* [BLURT](https://blurt.blog/@crypt0inf0)
