@@ -9,6 +9,7 @@ Update your details on `.env` file
 
 ### Install npm packages
 ```
+git clone https://github.com/crypt0inf0/dev_bot.git
 cd dev_bot
 npm install
 ```
