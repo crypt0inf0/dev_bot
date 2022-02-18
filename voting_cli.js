@@ -25,35 +25,53 @@ const min_user_bw = process.env.MIN_USER_BW;
 
 // Check voting power & bandwidth
 function checkBalance(i) {
-    setTimeout(() => {
-		axios.get(apis[i] + '/accounts/' + username).then((user_data) => {
-			// VP & BW gets updated only on every new txs made by you
-			var user_vp = user_data.data[0].vt.v;
-			var user_bw = user_data.data[0].bw.v;
-			// console.log(user_vp);
-			
-			if (user_vp > min_user_vp && user_bw > min_user_bw) {
-				isBalanceAvailable = true;
+    setInterval(() => {
+	    javalon.getAccount(username, (err, account) => {
+	       let user_vp = javalon.votingPower(account);
+	       let user_bw = javalon.bandwidth(account);
+	       console.log(err)
+// 	       console.log(user_vp);
+	       
+	       if (user_vp > min_user_vp && user_bw > min_user_bw) {
+			isBalanceAvailable = true;
+			clearTimeout(timeout);
 			} else {
 				isBalanceAvailable = false;
+				clearTimeout(timeout);
 				console.log("You don't have enough voting power/bandwidth");
 				return;
 			}
-		}).catch(e => {console.error(e)});
+		});
 		
-		if(i >= apis.length - 1){
-			checkBalance(0);
-		}else {
-			checkBalance(++i);
-		}
+// 		axios.get(apis[i] + '/accounts/' + username).then((user_data) => {
+// 			// VP & BW gets updated only on every new txs made by you
+// 			var user_vp = user_data.data[0].vt.v;
+// 			var user_bw = user_data.data[0].bw.v;
+// 			// console.log(user_vp);
+			
+// 			if (user_vp > min_user_vp && user_bw > min_user_bw) {
+// 				isBalanceAvailable = true;
+// 			} else {
+// 				isBalanceAvailable = false;
+// 				console.log("You don't have enough voting power/bandwidth");
+// 				return;
+// 			}
+// 		}).catch(e => {console.error(e)});
+		
+// 		if(i >= apis.length - 1){
+// 			checkBalance(0);
+// 		}else {
+// 			checkBalance(++i);
+// 		}
     }, 30 * 60 * 1000); // 30 min
+}
 
 checkBalance(0);
 
 // Avalon stream
 var timeout = setTimeout(() => {
 	avalonStream();
-	clearTimeout(timeout);
+// 	clearTimeout(timeout);
 }, 0);
 
 function avalonStream() {
