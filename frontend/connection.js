@@ -8,7 +8,7 @@ const connectionPrams = {
     // useFindAndModify: false // We get warnings without this for some reason.
 }
 
-const connectDB = mongoose.connect(process.env.MONGO_URI, connectionPrams).then(() => {console.log('connected to cloud atlas')})
+const connectDB = mongoose.connect(process.env.MONGO_URI, connectionPrams).then(() => {console.log('connected to mongodb')})
 .catch((err) => console.log(err))
 
 module.exports = connectDB
